@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>y9t6</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+:root {
+  --bg:#0f1117;--surface:#1a1d2e;--surface2:#22263a;--border:#353a5c;
+  --accent:#ff7a20;--text:#f0f0ff;--text-muted:#9090c0;
+  --success:#2ecc71;--warning:#f1c40f;--danger:#e74c3c;
+  --mono:'Space Mono',monospace;--sans:'DM Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;overflow:hidden;}
+.presentation{display:flex;flex-direction:column;height:100vh;}
+.progress-bar{height:3px;background:var(--border);flex-shrink:0;position:relative;}
+.progress-fill{height:100%;background:var(--accent);transition:width 0.5s ease;}
+.slide-area{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden;}
+.slide{
+  width:100%;max-width:920px;background:var(--surface);border:1px solid var(--border);
+  border-radius:20px;padding:48px 56px;position:relative;overflow-y:auto;
+  max-height:calc(100vh - 130px);animation:sIn 0.3s ease;
+}
+@keyframes sIn{from{opacity:0;transform:translateX(20px);}to{opacity:1;transform:none;}}
+.slide::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),transparent);}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.stype{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;padding:3px 10px;border-radius:5px;display:inline-block;}
+.t-intro   {background:rgba(0,240,255,.12);color:#00f0ff;border:1px solid rgba(0,240,255,.3);}
+.t-concept {background:rgba(191,95,255,.12);color:#bf5fff;border:1px solid rgba(191,95,255,.3);}
+.t-activity{background:rgba(255,122,32,.12);color:#ff7a20;border:1px solid rgba(255,122,32,.3);}
+.t-summary {background:rgba(46,204,113,.12);color:#2ecc71;border:1px solid rgba(46,204,113,.3);}
+.t-compete {background:rgba(241,196,15,.12);color:#f1c40f;border:1px solid rgba(241,196,15,.3);}
+.snum{font-family:var(--mono);font-size:11px;color:var(--text-muted);}
+.slide h1{font-size:clamp(20px,3.5vw,34px);font-weight:700;line-height:1.15;margin-bottom:18px;}
+.slide h3{font-size:16px;font-weight:700;margin:18px 0 10px;}
+.sb{color:var(--text-muted);font-size:15px;line-height:1.8;}
+.sb ul,.sb ol{padding-left:22px;}
+.sb li{margin-bottom:7px;}
+.sb li::marker{color:var(--accent);}
+.sb strong{color:var(--text);}
+.sb p{margin-bottom:12px;}
+.sb p:last-child{margin-bottom:0;}
+code{font-family:var(--mono);background:var(--surface2);border:1px solid var(--border);padding:2px 7px;border-radius:5px;font-size:13px;color:var(--accent);}
+pre{font-family:var(--mono);background:var(--surface2);border:1px solid var(--border);padding:16px 20px;border-radius:10px;font-size:13px;color:var(--accent);overflow-x:auto;margin:12px 0;line-height:1.7;}
+.callout{background:var(--surface2);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0;font-size:14px;color:var(--text);}
+.callout.warn{border-left-color:var(--warning);background:rgba(241,196,15,.08);}
+.callout.success{border-left-color:var(--success);background:rgba(46,204,113,.08);}
+.callout.compete{border-left-color:var(--warning);background:rgba(241,196,15,.06);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:14px 0;}
+.card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;}
+.card h4{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:10px;}
+/* Binary table */
+.bit-table{width:100%;border-collapse:collapse;margin:14px 0;font-family:var(--mono);}
+.bit-table th{background:var(--surface2);padding:10px 14px;border:1px solid var(--border);text-align:center;font-size:13px;color:var(--accent);}
+.bit-table td{padding:10px 14px;border:1px solid var(--border);text-align:center;font-size:14px;}
+.bit-table tr:nth-child(even) td{background:rgba(255,255,255,.02);}
+.bit-highlight{background:rgba(0,240,255,.15)!important;color:var(--accent);font-weight:700;}
+/* Task interactive */
+.task-box{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;margin:14px 0;}
+.task-box h4{font-size:13px;font-weight:700;margin-bottom:12px;color:var(--text);}
+.answer-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;}
+.answer-row label{font-size:13px;color:var(--text-muted);min-width:220px;}
+.ans-input{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:6px 12px;color:var(--text);font-family:var(--mono);font-size:14px;width:120px;text-align:center;transition:border-color .2s;}
+.ans-input:focus{outline:none;border-color:var(--accent);}
+.check-btn{padding:6px 14px;border-radius:7px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans);transition:all .2s;}
+.check-btn:hover{background:var(--accent);color:#000;}
+.fb{font-size:12px;font-weight:700;padding:4px 10px;border-radius:6px;display:none;}
+.fb.ok{background:rgba(46,204,113,.15);color:var(--success);border:1px solid var(--success);display:inline-block;}
+.fb.no{background:rgba(231,76,60,.15);color:var(--danger);border:1px solid var(--danger);display:inline-block;}
+/* Compete */
+.compete-board{background:var(--surface2);border:2px solid var(--warning);border-radius:14px;padding:20px;margin:14px 0;}
+.compete-board h4{color:var(--warning);font-size:14px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.score-display{font-family:var(--mono);font-size:36px;font-weight:700;color:var(--warning);text-align:center;margin:10px 0;}
+.timer-bar{height:8px;background:var(--border);border-radius:4px;margin:8px 0;overflow:hidden;}
+.timer-fill{height:100%;background:var(--warning);border-radius:4px;transition:width 1s linear;}
+.compete-input{background:var(--bg);border:2px solid var(--warning);border-radius:8px;padding:10px 16px;color:var(--text);font-family:var(--mono);font-size:20px;width:100%;text-align:center;margin:10px 0;}
+.compete-input:focus{outline:none;}
+.compete-btn{padding:10px 28px;border-radius:8px;border:none;background:var(--warning);color:#000;font-weight:700;font-size:14px;cursor:pointer;font-family:var(--sans);width:100%;margin-top:6px;}
+.compete-q{font-size:18px;font-weight:700;text-align:center;padding:14px;color:var(--text);min-height:56px;}
+.leaderboard{list-style:none;margin-top:10px;}
+.leaderboard li{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:8px;font-size:13px;margin-bottom:4px;background:rgba(241,196,15,.06);border:1px solid rgba(241,196,15,.15);}
+.lb-pos{font-family:var(--mono);font-size:12px;color:var(--warning);width:24px;}
+.lb-name{flex:1;font-weight:600;}
+.lb-score{font-family:var(--mono);font-size:13px;color:var(--warning);}
+/* Nav */
+.nav-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-top:1px solid var(--border);flex-shrink:0;background:var(--surface);}
+.nav-btn{padding:8px 22px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;border:1px solid var(--border);background:var(--surface2);color:var(--text);transition:all .2s;font-family:var(--sans);}
+.nav-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);}
+.nav-btn:disabled{opacity:.3;cursor:not-allowed;}
+.nav-btn.primary{background:var(--accent);color:#000;border-color:var(--accent);}
+.nav-center{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.dot-row{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;max-width:300px;}
+.pdot{width:7px;height:7px;border-radius:50%;background:var(--border);cursor:pointer;transition:all .2s;flex-shrink:0;}
+.pdot.active{background:var(--accent);transform:scale(1.4);}
+.pdot.done{background:var(--text-muted);}
+.pdot.compete-dot{background:rgba(241,196,15,.4);}
+.pdot.compete-dot.active{background:var(--warning);}
+.sctr{font-family:var(--mono);font-size:11px;color:var(--text-muted);}
+.kbhint{font-size:11px;color:var(--text-muted);}
+/* Filters */
+body.nature-green{--bg:#f4f1e8;--surface:#fff;--surface2:#ebe6d5;--border:#a8956a;--accent:#3a7a3a;--text:#1c1a0e;--text-muted:#5c5430;}
+body.nature-green .callout{background:#e8f5e0!important;border-left-color:#3a7a3a!important;}
+body.nature-green code,body.nature-green pre{background:#e8f5e0!important;color:#1c3a1c!important;border-color:#a8c8a8!important;}
+body.superpower *{font-family:'OpenDyslexic','Comic Sans MS',cursive!important;letter-spacing:.06em;word-spacing:.18em;line-height:1.9!important;}
+body.superpower{--bg:#fffbea;--surface:#fff;--surface2:#f5f0dc;--border:#c8b97a;--text:#1a1200;--text-muted:#5a4e20;--accent:#1a6fd4;}
+@media(max-width:640px){.slide{padding:24px 18px;}.two-col,.three-col{grid-template-columns:1fr;}.nav-btn{padding:7px 14px;font-size:12px;}}
+</style>
+</head>
+<body>
+<div class="presentation">
+  <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+  <div class="slide-area"><div class="slide" id="slide"></div></div>
+  <div class="nav-bar">
+    <button class="nav-btn" id="prev-btn" onclick="goPrev()">← Previous</button>
+    <div class="nav-center">
+      <div class="dot-row" id="dots"></div>
+      <div class="sctr" id="sctr">1 / 1</div>
+      <div class="kbhint">← → Space to navigate &nbsp;|&nbsp; 🏆 Competition on last slide</div>
+    </div>
+    <button class="nav-btn primary" id="next-btn" onclick="goNext()">Next →</button>
+  </div>
+</div>
+<script>
+const LESSON_ID = 'y9t6';
+const SLIDES = [
+  {
+    type: 'intro',
+    title: 'Pseudocode — Designing Before Coding',
+    body: `<p><strong>Pseudocode</strong> is a way of describing an algorithm using structured English that resembles code, but can be understood by anyone — regardless of the programming language they know.</p>
+<div class="two-col">
+  <div class="card"><h4>Why use pseudocode?</h4><ul><li>Plan logic before writing real code</li><li>Communicate algorithms clearly</li><li>Language-independent — works for Python, Java, C#...</li><li>Essential in GCSE and A-Level exams</li></ul></div>
+  <div class="card"><h4>Pseudocode vs Code</h4><p><strong>Python:</strong></p><pre style="font-size:12px">if score >= 50:
+    print("Pass")</pre><p><strong>Pseudocode:</strong></p><pre style="font-size:12px">IF score >= 50 THEN
+    OUTPUT "Pass"
+ENDIF</pre></div>
+</div>
+<div class="callout">🎯 <strong>Goals:</strong> Read and write pseudocode fluently using variables, input/output, selection, loops, and subroutines.</div>`,
+  },
+  {
+    type: 'concept',
+    title: 'Variables, Assignment & Data Types',
+    body: `<p>A <strong>variable</strong> is a named location in memory that stores a value. In pseudocode, we use the <code>←</code> arrow for assignment:</p>
+<pre>name ← "Alice"
+age  ← 17
+score ← 95.5
+passed ← TRUE</pre>
+<table class="bit-table">
+  <tr><th>Data Type</th><th>Description</th><th>Example</th></tr>
+  <tr><td><strong>Integer</strong></td><td>Whole number</td><td><code>score ← 42</code></td></tr>
+  <tr><td><strong>Real</strong></td><td>Decimal number</td><td><code>pi ← 3.14159</code></td></tr>
+  <tr><td><strong>String</strong></td><td>Text (in quotes)</td><td><code>name ← "Bob"</code></td></tr>
+  <tr><td><strong>Boolean</strong></td><td>True or False</td><td><code>logged ← TRUE</code></td></tr>
+  <tr><td><strong>Char</strong></td><td>Single character</td><td><code>grade ← 'A'</code></td></tr>
+</table>
+<div class="callout warn">⚠️ <strong>= vs ←</strong> In pseudocode, <code>←</code> means assignment (store this value). <code>=</code> means comparison (are these equal?). Never mix them up!</div>`,
+  },
+  {
+    type: 'concept',
+    title: 'Input & Output',
+    body: `<p>Programs communicate with users through <strong>INPUT</strong> and <strong>OUTPUT</strong>:</p>
+<div class="two-col">
+  <div class="card">
+    <h4>INPUT — Read from user</h4>
+    <pre>name ← INPUT("Enter name: ")
+age  ← INPUT("Enter age: ")</pre>
+    <p>The value typed by the user is stored in the variable.</p>
+  </div>
+  <div class="card">
+    <h4>OUTPUT — Display to screen</h4>
+    <pre>OUTPUT "Hello, " + name
+OUTPUT "You are " + age
+OUTPUT score * 2</pre>
+    <p>Can output text, variables, or expressions.</p>
+  </div>
+</div>
+<div class="callout">
+  <strong>Full example:</strong>
+  <pre>name ← INPUT("What is your name? ")
+OUTPUT "Welcome, " + name + "!"</pre>
+</div>
+<div class="two-col">
+  <div class="card"><h4>String Concatenation</h4><p>Join strings with <code>+</code>:<br><pre>"Hello, " + name</pre></p></div>
+  <div class="card"><h4>Type Conversion</h4><p>Convert types when needed:<br><pre>INT("42") → 42
+STR(42) → "42"</pre></p></div>
+</div>`,
+  },
+  {
+    type: 'concept',
+    title: 'Selection — IF, ELSE IF, ELSE',
+    body: `<p>Selection lets a program make decisions and follow different paths:</p>
+<div class="two-col">
+  <div class="card">
+    <h4>Simple IF</h4>
+    <pre>IF age >= 18 THEN
+    OUTPUT "Adult"
+ENDIF</pre>
+  </div>
+  <div class="card">
+    <h4>IF...ELSE</h4>
+    <pre>IF age >= 18 THEN
+    OUTPUT "Adult"
+ELSE
+    OUTPUT "Minor"
+ENDIF</pre>
+  </div>
+</div>
+<div class="card" style="margin-top:14px">
+  <h4>IF...ELSE IF...ELSE (multiple branches)</h4>
+  <pre>IF score >= 70 THEN
+    OUTPUT "Distinction"
+ELSE IF score >= 50 THEN
+    OUTPUT "Pass"
+ELSE IF score >= 30 THEN
+    OUTPUT "Near miss"
+ELSE
+    OUTPUT "Fail"
+ENDIF</pre>
+</div>
+<div class="callout warn">⚠️ Always end with <code>ENDIF</code>. Indentation shows what is inside the block — this is critical for readability.</div>`,
+  },
+  {
+    type: 'concept',
+    title: 'Iteration — FOR and WHILE Loops',
+    body: `<p><strong>Iteration</strong> repeats a block of code. There are two main types:</p>
+<div class="two-col">
+  <div class="card">
+    <h4>FOR loop — count-controlled</h4>
+    <p>Use when you know how many times to repeat.</p>
+    <pre>FOR i ← 1 TO 5
+    OUTPUT i
+ENDFOR
+
+FOR i ← 1 TO 10 STEP 2
+    OUTPUT i
+ENDFOR</pre>
+    <p style="font-size:12px;color:var(--text-muted)">Outputs: 1 3 5 7 9 (odd numbers)</p>
+  </div>
+  <div class="card">
+    <h4>WHILE loop — condition-controlled</h4>
+    <p>Use when you repeat until a condition is false.</p>
+    <pre>count ← 0
+WHILE count < 5
+    OUTPUT count
+    count ← count + 1
+ENDWHILE
+
+password ← INPUT("Password: ")
+WHILE password ≠ "secret"
+    OUTPUT "Wrong!"
+    password ← INPUT("Try again: ")
+ENDWHILE</pre>
+  </div>
+</div>
+<div class="callout">🔑 <strong>Key difference:</strong> FOR is for definite iteration (known count); WHILE is for indefinite iteration (unknown count).</div>`,
+  },
+  {
+    type: 'concept',
+    title: 'Subroutines — Procedures & Functions',
+    body: `<p><strong>Subroutines</strong> are named, reusable blocks of code. They help us avoid repeating ourselves (the DRY principle — Don't Repeat Yourself).</p>
+<div class="two-col">
+  <div class="card">
+    <h4>Procedure (no return value)</h4>
+    <pre>PROCEDURE greet(name)
+    OUTPUT "Hello, " + name
+    OUTPUT "Welcome back!"
+ENDPROCEDURE
+
+CALL greet("Alice")
+CALL greet("Bob")</pre>
+  </div>
+  <div class="card">
+    <h4>Function (returns a value)</h4>
+    <pre>FUNCTION square(n)
+    RETURN n * n
+ENDFUNCTION
+
+result ← square(5)
+OUTPUT result    # outputs 25
+
+OUTPUT square(7) # outputs 49</pre>
+  </div>
+</div>
+<div class="callout">💡 <strong>Parameters</strong> are the inputs to a subroutine (e.g. <code>name</code>, <code>n</code>). Functions use <code>RETURN</code> to send a value back. Procedures do not.</div>
+<div class="callout warn">⚠️ <strong>Scope:</strong> Variables declared inside a subroutine are <em>local</em> — they only exist within that subroutine.</div>`,
+  },
+  {
+    type: 'concept',
+    title: 'Arrays in Pseudocode',
+    body: `<p>An <strong>array</strong> stores multiple values under one name, accessed by index (position).</p>
+<pre># Declare and initialise
+scores ← [85, 72, 91, 60, 78]
+
+# Access by index (starts at 0)
+OUTPUT scores[0]    # 85
+OUTPUT scores[2]    # 91
+
+# Set a value
+scores[1] ← 99
+
+# Loop through an array
+FOR i ← 0 TO LEN(scores) - 1
+    OUTPUT scores[i]
+ENDFOR</pre>
+<div class="two-col">
+  <div class="card"><h4>Useful Array Functions</h4><p><code>LEN(array)</code> — number of items<br><code>array[i]</code> — access item at index i<br><code>array[i] ← value</code> — set item</p></div>
+  <div class="card"><h4>Common Pattern: Find Max</h4><pre>max ← scores[0]
+FOR i ← 1 TO LEN(scores)-1
+    IF scores[i] > max THEN
+        max ← scores[i]
+    ENDIF
+ENDFOR
+OUTPUT max</pre></div>
+</div>`,
+  },
+  {
+    type: 'concept',
+    title: 'Putting It Together — Full Algorithm Examples',
+    body: `<p>Let's see complete algorithms that combine everything we've covered.</p>
+<div class="two-col">
+  <div class="card">
+    <h4>Example 1: Grade Calculator</h4>
+    <pre>PROCEDURE getGrade(score)
+    IF score >= 70 THEN
+        OUTPUT "A"
+    ELSE IF score >= 60 THEN
+        OUTPUT "B"
+    ELSE IF score >= 50 THEN
+        OUTPUT "C"
+    ELSE
+        OUTPUT "U"
+    ENDIF
+ENDPROCEDURE
+
+total ← 0
+FOR i ← 1 TO 5
+    s ← INPUT("Score: ")
+    total ← total + INT(s)
+ENDFOR
+avg ← total / 5
+OUTPUT "Average: " + STR(avg)
+CALL getGrade(avg)</pre>
+  </div>
+  <div class="card">
+    <h4>Example 2: Number Guessing Game</h4>
+    <pre>secret ← 42
+guess ← 0
+attempts ← 0
+
+WHILE guess ≠ secret
+    guess ← INT(INPUT("Guess: "))
+    attempts ← attempts + 1
+    IF guess < secret THEN
+        OUTPUT "Too low!"
+    ELSE IF guess > secret THEN
+        OUTPUT "Too high!"
+    ENDIF
+ENDWHILE
+
+OUTPUT "Correct!"
+OUTPUT "Attempts: " + STR(attempts)</pre>
+  </div>
+</div>`,
+  },
+  {
+    type: 'activity',
+    title: 'Guided Tasks — Pseudocode Practice',
+    body: `<p>Write pseudocode for each problem. Type your answer and check key terms.</p>
+<div class="task-box">
+  <h4>📝 Task A — Concepts Check</h4>
+  <div class="answer-row"><label>1. What keyword starts a loop that repeats a set number of times?</label><input class="ans-input" id="p1" placeholder="keyword"><button class="check-btn" onclick="chkAny('p1','fp1',['FOR','for'])">Check</button><span class="fb" id="fp1"></span></div>
+  <div class="answer-row"><label>2. What keyword starts a conditional block?</label><input class="ans-input" id="p2" placeholder="keyword"><button class="check-btn" onclick="chkAny('p2','fp2',['IF','if'])">Check</button><span class="fb" id="fp2"></span></div>
+  <div class="answer-row"><label>3. What keyword outputs to the screen?</label><input class="ans-input" id="p3" placeholder="keyword"><button class="check-btn" onclick="chkAny('p3','fp3',['OUTPUT','output','PRINT','print'])">Check</button><span class="fb" id="fp3"></span></div>
+  <div class="answer-row"><label>4. What keyword reads input from a user?</label><input class="ans-input" id="p4" placeholder="keyword"><button class="check-btn" onclick="chkAny('p4','fp4',['INPUT','input'])">Check</button><span class="fb" id="fp4"></span></div>
+  <div class="answer-row"><label>5. What symbol assigns a value to a variable?</label><input class="ans-input" id="p5" placeholder="symbol"><button class="check-btn" onclick="chk('p5','fp5','←')">Check</button><span class="fb" id="fp5"></span></div>
+</div>
+<div class="task-box">
+  <h4>📝 Task B — Trace the Code</h4>
+  <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px">Given this pseudocode — what does it output?</p>
+  <pre>x ← 5
+y ← 3
+z ← x * y + 2
+OUTPUT z</pre>
+  <div class="answer-row"><label>6. What does the pseudocode above output?</label><input class="ans-input" id="p6" placeholder="?"><button class="check-btn" onclick="chk('p6','fp6','17')">Check</button><span class="fb" id="fp6"></span></div>
+  <pre>FOR i ← 1 TO 3
+    OUTPUT i * 2
+ENDFOR</pre>
+  <div class="answer-row"><label>7. How many lines does this loop print?</label><input class="ans-input" id="p7" placeholder="?"><button class="check-btn" onclick="chk('p7','fp7','3')">Check</button><span class="fb" id="fp7"></span></div>
+  <div class="answer-row"><label>8. What is the last value printed?</label><input class="ans-input" id="p8" placeholder="?"><button class="check-btn" onclick="chk('p8','fp8','6')">Check</button><span class="fb" id="fp8"></span></div>
+</div>
+<div class="task-box">
+  <h4>📝 Task C — Spot the Error</h4>
+  <pre>score ← INPUT("Enter score: ")
+IF score >= 50
+    OUTPUT "Pass"
+ELSE
+    OUTPUT "Fail"</pre>
+  <div class="answer-row"><label>9. What is missing from the IF line?</label><input class="ans-input" id="p9" placeholder="keyword"><button class="check-btn" onclick="chkAny('p9','fp9',['THEN','then'])">Check</button><span class="fb" id="fp9"></span></div>
+  <div class="answer-row"><label>10. What keyword is missing at the end?</label><input class="ans-input" id="p10" placeholder="keyword"><button class="check-btn" onclick="chkAny('p10','fp10',['ENDIF','endif'])">Check</button><span class="fb" id="fp10"></span></div>
+</div>
+<div class="callout warn">💡 <strong>Remember:</strong> Every IF needs THEN and ENDIF. Every FOR needs ENDFOR. Every WHILE needs ENDWHILE.</div>`,
+  },
+  {
+    type: 'summary',
+    title: 'Pseudocode — Key Reference',
+    body: `<table class="bit-table">
+  <tr><th>Construct</th><th>Syntax</th><th>Used for</th></tr>
+  <tr><td><strong>Assignment</strong></td><td><code>x ← value</code></td><td>Storing a value in a variable</td></tr>
+  <tr><td><strong>Input</strong></td><td><code>x ← INPUT("prompt")</code></td><td>Reading from user</td></tr>
+  <tr><td><strong>Output</strong></td><td><code>OUTPUT value</code></td><td>Displaying to screen</td></tr>
+  <tr><td><strong>Selection</strong></td><td><code>IF...THEN...ELSE...ENDIF</code></td><td>Making decisions</td></tr>
+  <tr><td><strong>FOR loop</strong></td><td><code>FOR i ← 1 TO n...ENDFOR</code></td><td>Definite iteration</td></tr>
+  <tr><td><strong>WHILE loop</strong></td><td><code>WHILE cond...ENDWHILE</code></td><td>Indefinite iteration</td></tr>
+  <tr><td><strong>Procedure</strong></td><td><code>PROCEDURE name(params)...ENDPROCEDURE</code></td><td>Reusable block, no return</td></tr>
+  <tr><td><strong>Function</strong></td><td><code>FUNCTION name(params)...RETURN...ENDFUNCTION</code></td><td>Reusable block, returns value</td></tr>
+  <tr><td><strong>Array</strong></td><td><code>arr ← [v1, v2, v3]</code> / <code>arr[i]</code></td><td>Storing multiple values</td></tr>
+</table>
+<div class="callout success">✅ Pseudocode is your planning tool — write it before every program and exam answer!</div>`,
+  },
+  {
+    type: 'compete',
+    title: '🏆 Pseudocode Lightning Round',
+    body: `
+<p style="color:var(--text-muted);margin-bottom:4px">Test your pseudocode knowledge! Keywords, traces, and logic — as fast as you can!</p>
+<div class="compete-board">
+  <h4>🏆 Pseudocode Lightning Round</h4>
+  <div id="comp-start-area">
+    <p style="font-size:14px;color:var(--text-muted);margin-bottom:12px">Enter your name and hit Start. You have <strong style="color:var(--warning)">15 seconds</strong> per question. Faster answers score more points!</p>
+    <input class="compete-input" id="comp-name" placeholder="Your name..." style="font-size:16px;width:100%;max-width:360px;display:block;margin:0 auto 10px">
+    <button class="compete-btn" onclick="startComp()">🚀 Start Competition!</button>
+    <div style="margin-top:14px">
+      <h4 style="font-size:12px;color:var(--text-muted);margin-bottom:8px">🏆 Leaderboard</h4>
+      <ul class="leaderboard" id="leaderboard"><li style="color:var(--text-muted);font-size:13px">Loading...</li></ul>
+    </div>
+  </div>
+  <div id="comp-game-area" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="font-family:var(--mono);font-size:12px;color:var(--text-muted)" id="comp-qnum">1 / 10</span>
+      <span style="font-family:var(--mono);font-size:12px;color:var(--warning)" id="comp-timeleft">15s</span>
+    </div>
+    <div class="timer-bar"><div class="timer-fill" id="comp-timer-fill" style="width:100%"></div></div>
+    <div class="compete-q" id="comp-q">Question loads here</div>
+    <input class="compete-input" id="comp-ans" placeholder="Type your answer..." autocomplete="off">
+    <button class="compete-btn" onclick="submitCompAns()">Submit Answer ↵</button>
+    <div style="display:flex;justify-content:space-between;margin-top:10px">
+      <span style="font-size:13px;color:var(--text-muted)">Score: <strong style="color:var(--warning);font-family:var(--mono)" id="comp-score">0</strong></span>
+      <span id="comp-feedback" style="font-size:13px;font-weight:700"></span>
+    </div>
+  </div>
+  <div id="comp-end-area" style="display:none;text-align:center">
+    <div style="font-size:40px;margin-bottom:8px">🎉</div>
+    <p style="font-size:18px;font-weight:700;margin-bottom:4px">Well done, <span id="comp-final-name"></span>!</p>
+    <p style="color:var(--text-muted);margin-bottom:8px">Final score</p>
+    <div class="score-display" id="comp-final-score">0</div>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px">Score saved to leaderboard</p>
+    <button class="compete-btn" onclick="resetComp()">🔄 Play Again</button>
+    <div style="margin-top:16px;text-align:left">
+      <h4 style="font-size:12px;color:var(--text-muted);margin-bottom:8px">🏆 Top Scores</h4>
+      <ul class="leaderboard" id="leaderboard"></ul>
+    </div>
+  </div>
+</div>`,
+    onRender: () => { const lb = JSON.parse(localStorage.getItem("ks3_lb_y9t6")||"[]"); renderLeaderboard(lb); },
+  },
+];
+const COMP_Qs = [
+  { q: 'What symbol is used for assignment in pseudocode?', answers: ['←','<-'] },
+  { q: 'What keyword displays output to the screen?', answers: ['OUTPUT','output'] },
+  { q: 'What keyword reads input from a user?', answers: ['INPUT','input'] },
+  { q: 'What keyword ends an IF block?', answers: ['ENDIF','endif'] },
+  { q: 'What keyword ends a FOR loop?', answers: ['ENDFOR','endfor'] },
+  { q: 'What keyword ends a WHILE loop?', answers: ['ENDWHILE','endwhile'] },
+  { q: 'What keyword sends a value back from a function?', answers: ['RETURN','return'] },
+  { q: 'FOR i ← 1 TO 5 — how many times does the loop run?', answers: ['5'] },
+  { q: 'What data type stores True or False?', answers: ['Boolean','boolean'] },
+  { q: 'x ← 4, y ← 3 — what is x * y + 1?', answers: ['13'] },
+  { q: 'What does LEN(array) return?', answers: ['the number of items','length','number of items','size'] },
+  { q: 'FOR loops are used for which type of iteration?', answers: ['definite','count-controlled'] },
+  { q: 'What is the index of the FIRST element in an array?', answers: ['0'] },
+  { q: 'A subroutine that returns a value is called a...', answers: ['function','Function'] },
+];
+
+// ── RENDER ──────────────────────────────────────────────────
+let cur = 0;
+function render() {
+  const s = SLIDES[cur], total = SLIDES.length;
+  const typeLabel = s.type === 'compete' ? 'Competition' : s.type.charAt(0).toUpperCase() + s.type.slice(1);
+  document.getElementById('slide').innerHTML =
+    '<div class="eyebrow">' +
+      '<span class="stype t-' + s.type + '">' + typeLabel + '</span>' +
+      '<span class="snum">Slide ' + (cur+1) + ' of ' + total + '</span>' +
+    '</div>' +
+    '<h1>' + s.title + '</h1>' +
+    '<div class="sb">' + (s.body || '') + '</div>';
+  if (s.onRender) setTimeout(s.onRender, 80);
+  document.getElementById('prog').style.width = ((cur+1)/total*100) + '%';
+  document.getElementById('sctr').textContent = (cur+1) + ' / ' + total;
+  document.getElementById('prev-btn').disabled = cur === 0;
+  document.getElementById('next-btn').disabled = cur === total - 1;
+  const dots = document.getElementById('dots');
+  dots.innerHTML = '';
+  SLIDES.forEach((sl, i) => {
+    const d = document.createElement('div');
+    const isCompete = sl.type === 'compete';
+    d.className = 'pdot' + (isCompete ? ' compete-dot' : '') + (i===cur?' active':i<cur?' done':'');
+    d.onclick = () => { cur=i; render(); };
+    d.title = sl.title;
+    dots.appendChild(d);
+  });
+}
+function goNext() { if (cur < SLIDES.length-1) { cur++; render(); } }
+function goPrev() { if (cur > 0) { cur--; render(); } }
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goNext(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); goPrev(); }
+});
+window.addEventListener('message', e => {
+  if (e.data && e.data.type === 'filter') {
+    document.body.classList.remove('nature-green','superpower');
+    if (e.data.filter) document.body.classList.add(e.data.filter);
+  }
+});
+
+// ── TASK CHECK HELPER ────────────────────────────────────────
+function chk(inputId, fbId, correct) {
+  const val = document.getElementById(inputId).value.trim().toLowerCase().replace(/\s+/g,'');
+  const ans = String(correct).toLowerCase().replace(/\s+/g,'');
+  const ok  = val === ans;
+  const fb  = document.getElementById(fbId);
+  fb.className = 'fb ' + (ok ? 'ok' : 'no');
+  fb.textContent = ok ? '✓ Correct!' : '✗ Try again — answer: ' + correct;
+}
+function chkAny(inputId, fbId, answers) {
+  const val = document.getElementById(inputId).value.trim().toLowerCase().replace(/\s+/g,'');
+  const ok  = answers.map(a=>String(a).toLowerCase().replace(/\s+/g,'')).includes(val);
+  const fb  = document.getElementById(fbId);
+  fb.className = 'fb ' + (ok ? 'ok' : 'no');
+  fb.textContent = ok ? '✓ Correct!' : '✗ Try again — answer: ' + answers[0];
+}
+
+// ── COMPETITION ENGINE ───────────────────────────────────────
+let compState = { score:0, qIdx:0, timer:null, timeLeft:15, active:false, name:'' };
+
+function startComp() {
+  const nameEl = document.getElementById('comp-name');
+  if (!nameEl || !nameEl.value.trim()) { alert('Enter your name first!'); return; }
+  compState.name = nameEl.value.trim();
+  compState.score = 0;
+  compState.qIdx = 0;
+  compState.active = true;
+  document.getElementById('comp-start-area').style.display = 'none';
+  document.getElementById('comp-game-area').style.display = 'block';
+  document.getElementById('comp-end-area').style.display = 'none';
+  nextCompQ();
+}
+
+function nextCompQ() {
+  if (compState.qIdx >= COMP_Qs.length) { endComp(); return; }
+  clearInterval(compState.timer);
+  compState.timeLeft = 15;
+  const q = COMP_Qs[compState.qIdx];
+  document.getElementById('comp-q').textContent = q.q;
+  document.getElementById('comp-ans').value = '';
+  document.getElementById('comp-ans').focus();
+  document.getElementById('comp-score').textContent = compState.score;
+  document.getElementById('comp-qnum').textContent = (compState.qIdx+1) + ' / ' + COMP_Qs.length;
+  document.getElementById('comp-feedback').textContent = '';
+  updateTimer();
+  compState.timer = setInterval(() => {
+    compState.timeLeft--;
+    updateTimer();
+    if (compState.timeLeft <= 0) { clearInterval(compState.timer); autoWrong(); }
+  }, 1000);
+}
+
+function updateTimer() {
+  const el = document.getElementById('comp-timer-fill');
+  const pct = (compState.timeLeft / 15) * 100;
+  if (el) el.style.width = pct + '%';
+  const tlEl = document.getElementById('comp-timeleft');
+  if (tlEl) tlEl.textContent = compState.timeLeft + 's';
+}
+
+function submitCompAns() {
+  if (!compState.active) return;
+  clearInterval(compState.timer);
+  const ans = document.getElementById('comp-ans').value.trim().toLowerCase().replace(/\s+/g,'');
+  const q   = COMP_Qs[compState.qIdx];
+  const ok  = q.answers.map(a=>String(a).toLowerCase().replace(/\s+/g,'')).includes(ans);
+  const fb  = document.getElementById('comp-feedback');
+  if (ok) {
+    const pts = Math.max(1, compState.timeLeft);
+    compState.score += pts;
+    fb.style.color = 'var(--success)';
+    fb.textContent = '✓ Correct! +' + pts + ' points';
+  } else {
+    fb.style.color = 'var(--danger)';
+    fb.textContent = '✗ Answer: ' + q.answers[0];
+  }
+  compState.qIdx++;
+  setTimeout(nextCompQ, 1200);
+}
+
+function autoWrong() {
+  const q  = COMP_Qs[compState.qIdx];
+  const fb = document.getElementById('comp-feedback');
+  fb.style.color = 'var(--danger)';
+  fb.textContent = '⏱ Time up! Answer: ' + q.answers[0];
+  compState.qIdx++;
+  setTimeout(nextCompQ, 1400);
+}
+
+function endComp() {
+  compState.active = false;
+  clearInterval(compState.timer);
+  document.getElementById('comp-game-area').style.display = 'none';
+  document.getElementById('comp-end-area').style.display = 'block';
+  document.getElementById('comp-final-score').textContent = compState.score;
+  document.getElementById('comp-final-name').textContent = compState.name;
+  // Save to leaderboard
+  const lb = JSON.parse(localStorage.getItem('ks3_lb_' + LESSON_ID) || '[]');
+  lb.push({ name: compState.name, score: compState.score, date: new Date().toLocaleDateString() });
+  lb.sort((a,b) => b.score - a.score);
+  const top10 = lb.slice(0,10);
+  localStorage.setItem('ks3_lb_' + LESSON_ID, JSON.stringify(top10));
+  renderLeaderboard(top10);
+}
+
+function renderLeaderboard(lb) {
+  const el = document.getElementById('leaderboard');
+  if (!el) return;
+  const medals = ['🥇','🥈','🥉'];
+  el.innerHTML = lb.length === 0
+    ? '<li style="color:var(--text-muted);font-size:13px">No scores yet — be the first!</li>'
+    : lb.map((e,i) => '<li><span class="lb-pos">' + (medals[i]||'#'+(i+1)) + '</span><span class="lb-name">' + e.name + '</span><span class="lb-score">' + e.score + ' pts</span></li>').join('');
+}
+
+function resetComp() {
+  document.getElementById('comp-start-area').style.display = 'block';
+  document.getElementById('comp-game-area').style.display = 'none';
+  document.getElementById('comp-end-area').style.display = 'none';
+  compState = { score:0, qIdx:0, timer:null, timeLeft:15, active:false, name:'' };
+}
+
+document.addEventListener('keydown', e => {
+  if (e.target.id === 'comp-ans' && e.key === 'Enter') { e.preventDefault(); submitCompAns(); }
+});
+render();
+
+</script>
+</body>
+</html>
